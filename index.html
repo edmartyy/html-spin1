@@ -1,124 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spin the Wheel</title>
-<style>
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-  }
-  .wheel-container {
-    position: relative;
-    width: 250px;
-    height: 250px;
-    margin-top: 20px;
-  }
-  .wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 8px solid #333;
-    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
-    position: relative;
-  }
-  .segment {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    background-color: #ffcd94;
-    clip-path: polygon(100% 0, 0 0, 0 100%);
-    transform-origin: 100% 100%;
-  }
-  .segment:nth-child(1) { transform: rotate(0deg); background-color: #f9b5ac; }
-  .segment:nth-child(2) { transform: rotate(60deg); background-color: #ffcd94; }
-  .segment:nth-child(3) { transform: rotate(120deg); background-color: #f3b3a6; }
-  .segment:nth-child(4) { transform: rotate(180deg); background-color: #f7e8a4; }
-  .segment:nth-child(5) { transform: rotate(240deg); background-color: #d1e8e4; }
-  .segment:nth-child(6) { transform: rotate(300deg); background-color: #c4d4e0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin the Wheel</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: purple;
+            margin: 0;
+        }
 
-  .wheel-pointer {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 30px solid #333;
-  }
+        .container {
+            text-align: center;
+        }
 
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #555;
-  }
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 5px solid black;
+            position: relative;
+            transform-origin: center;
+            overflow: hidden;
+            margin-bottom: 10px; /* Adjust space between wheel and arrow */
+        }
 
-  .result {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-  }
-</style>
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+            transform-origin: 100% 100%;
+            border: 1px solid black;
+        }
+
+        /* Arrow styling */
+        .arrow {
+            width: 0;
+            height: 10px;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid black;
+            position: relative;
+            top: 100%; /* Position it just below the wheel */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Button styling */
+        #spinBtn {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: 2px solid black;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- The wheel -->
+        <div class="wheel" id="wheel">
+            <div class="segment" style="transform: rotate(0deg); background-color: pink;">5%</div>
+            <div class="segment" style="transform: rotate(45deg); background-color: yellow;">10%</div>
+            <div class="segment" style="transform: rotate(90deg); background-color: pink;">0%</div>
+            <div class="segment" style="transform: rotate(135deg); background-color: yellow;">5%</div>
+            <div class="segment" style="transform: rotate(180deg); background-color: pink;">10%</div>
+            <div class="segment" style="transform: rotate(225deg); background-color: yellow;">0%</div>
+            <div class="segment" style="transform: rotate(270deg); background-color: pink;">%</div>
+            <div class="segment" style="transform: rotate(315deg); background-color: yellow;">0%</div>
+        </div>
 
-<div class="wheel-container">
-  <div class="wheel" id="wheel">
-    <div class="segment">1</div>
-    <div class="segment">2</div>
-    <div class="segment">3</div>
-    <div class="segment">4</div>
-    <div class="segment">5</div>
-    <div class="segment">6</div>
-  </div>
-  <div class="wheel-pointer"></div>
-</div>
+        <!-- Arrow pointing to the wheel from below -->
+        <div class="arrow" id="arrow"></div>
 
-<button onclick="spinWheel()">Spin the Wheel</button>
-<div class="result" id="result">Result: </div>
+        <!-- Button to trigger the spin -->
+        <button id="spinBtn">Spin the Wheel!</button>
 
-<script>
-  const wheel = document.getElementById("wheel");
-  const resultDiv = document.getElementById("result");
-  const options = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6"];
-  let isSpinning = false;
+        <!-- Display the result -->
+        <div id="result"></div>
+    </div>
 
-  function spinWheel() {
-    if (isSpinning) return;
-    isSpinning = true;
+    <script>
+        let wheel = document.querySelector('.wheel');
+        let spinBtn = document.getElementById('spinBtn');
+        let result = document.getElementById('result');
 
-    // Generate a random angle to rotate the wheel
-    const angle = Math.floor(Math.random() * 3600) + 360;
-    wheel.style.transform = `rotate(${angle}deg)`;
+        let currentRotation = 0; // Track current rotation of the wheel
+        const segments = ["5%", "10%", "0%", "5%", "10%", "5%", "10%", "5%"]; // Segment values
+        const rotationPerSegment = 45; // 360 degrees / 8 segments
 
-    // Calculate the selected option
-    const selectedOptionIndex = Math.floor((360 - (angle % 360)) / (360 / options.length)) % options.length;
+        spinBtn.onclick = function() {
+            // Generate a random rotation value for the wheel to spin
+            let randomRotation = Math.ceil(Math.random() * 3600) + 1800; // Between 1800 and 5400 degrees (5-15 spins)
 
-    // Display the result after the wheel stops spinning
-    setTimeout(() => {
-      resultDiv.textContent = `Result: ${options[selectedOptionIndex]}`;
-      isSpinning = false;
-    }, 4000);  // Matches the CSS transition duration (4 seconds)
-  }
-</script>
+            // Apply the rotation and animate the wheel
+            wheel.style.transition = "transform 3s ease-out"; // Smooth transition for wheel spin
+            wheel.style.transform = "rotate(" + (currentRotation + randomRotation) + "deg)";
 
+            // Update the current rotation value for future spins
+            currentRotation += randomRotation;
+
+            // Show the result after the spin
+            setTimeout(function() {
+                let resultIndex = Math.floor((currentRotation % 360) / rotationPerSegment); // Determine segment based on rotation
+                result.innerText = `You won: ${segments[resultIndex]}`; // Corrected template literal
+            }, 3000); // Wait for the animation to finish before showing result
+        };
+    </script>
 </body>
 </html>
